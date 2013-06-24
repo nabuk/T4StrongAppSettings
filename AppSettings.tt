@@ -30,7 +30,7 @@ namespace T4StrongAppSettings
 	<# foreach (string p in properties)
 	   {
 			string s = p.Trim().Replace(" ", "_"); #>
-	public string <#= s #> { get { return ConfigurationManager.AppSettings["<#= s #>"]; } }
+	public string <#= s #> { get { return ConfigurationManager.AppSettings["<#= p #>"]; } }
 	<# } #>
 }
 }
