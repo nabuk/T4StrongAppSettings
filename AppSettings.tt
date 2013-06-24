@@ -1,0 +1,36 @@
+﻿<#@ output extension=".cs" #>
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Xml" #>
+<#
+string projectPath = this.Host.ResolvePath("");
+XmlDocument xdoc = new XmlDocument();
+xdoc.Load(projectPath+"\\App.config");
+XmlNode xnodes = xdoc.SelectSingleNode("configuration/appSettings");
+
+var properties =
+		xnodes
+        .ChildNodes
+        .Cast<XmlNode>()
+        .Select(x => x.Attributes["key"].Value)
+        .ToArray();
+		
+	
+#>
+using System.Configuration;
+
+namespace T4StrongAppSettings
+{
+	public class AppSettings
+	{
+	<# foreach (string p in properties)
+	   {
+			string s = p.Trim().Replace(" ", "_"); #>
+	public string <#= s #> { get { return ConfigurationManager.AppSettings["<#= s #>"]; } }
+	<# } #>
+}
+}
